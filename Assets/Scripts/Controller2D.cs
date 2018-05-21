@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,6 +16,11 @@ public class Controller2D : RaycastController {
         base.Start();
         collisions.faceDir = 1;
 
+    }
+
+    internal void Move(object p, Vector2 directionalInput)
+    {
+        throw new NotImplementedException();
     }
 
     public void Move(Vector2 moveAmount, bool standingOnPlatform)
@@ -65,6 +71,8 @@ public class Controller2D : RaycastController {
         {
             rayLength = 2 * skinWidth;
         }
+
+        CheckEdge(directionX, rayLength);
 
         for (int i = 0; i < horizontalRayCount; i++)
         {
@@ -185,6 +193,19 @@ public class Controller2D : RaycastController {
                 }
             }
         }
+    }
+
+    void CheckEdge(float directionX, float rayLength)
+    {
+        for (int i = 0; i < 1; i++)
+        {
+            Vector2 rayOrigin = (directionX == -1) ? raycastOrigins.topLeft : raycastOrigins.topRight;
+            rayOrigin += Vector2.up * (horizontalRaySpacing * i);
+            RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.right * directionX, rayLength, collisionMask);
+            Debug.DrawRay(rayOrigin, Vector2.right * directionX, Color.yellow);
+        }
+
+
     }
 
     void ClimbSlope(ref Vector2 moveAmount, float slopeAngle, Vector2 slopeNormal)

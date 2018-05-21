@@ -3,38 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Controller2D))]
-public class Player : MonoBehaviour {
-    [SerializeField] float moveSpeed;
-    [SerializeField] float maxJumpHeight=4;
-    [SerializeField] float minJumpHeight=1;
-    [SerializeField] float timeToJumpToApex;
-    [SerializeField] float accelerationTimeAirborne;
-    [SerializeField] float accelerationTimeGrounded;
-    [SerializeField] float wallSlideSpeedMax = 3;
-    [SerializeField] float wallStickTime=0.25f;
-    [SerializeField] Vector2 wallJumpClimb;
-    [SerializeField] Vector2 wallJumpOff;
-    [SerializeField] Vector2 wallLeap;
-    float timeToWallUnstick;
-    float gravity = -9.82f;
-    float maxJumpVelocity;
-    float minJumpVelocity;
-    float jumpVelocity;
-    float velocityXSmoothing;
-    Vector3 velocity;
-    Vector2 directionalInput;
+public class Player : MovingCreature {
+
     bool wallSliding;
     bool wallEdgeGrabbing;
-    int wallDirX;
-    Controller2D controller;
+    Sword sword;
 
-    void Start()
+    protected override void Start()
     {
-        controller = GetComponent<Controller2D>();
+        base.Start();
+        sword = GameObject.FindGameObjectWithTag("Sword").GetComponent<Sword>();
 
-        gravity = -(2 * maxJumpHeight) / Mathf.Pow(timeToJumpToApex, 2);
-        maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpToApex;
-        minJumpVelocity = Mathf.Sqrt(2 * Mathf.Abs(gravity) * minJumpHeight);
+        
     }
 
     void Update()
@@ -57,12 +37,9 @@ public class Player : MonoBehaviour {
         }
     }
 
-    public void SetDirectionalInput(Vector2 input)
-    {
-        directionalInput = input;
-    }
+    
 
-    public void OnJumpInputDown()
+    public override void OnJumpInputDown()
     {
         if (wallSliding)
         {
@@ -99,12 +76,27 @@ public class Player : MonoBehaviour {
         }
     }
 
-    public void OnJumpInputUp()
+    
+
+    public void OnHitInput()
     {
-        if (velocity.y > minJumpVelocity)
+        if (!sword.cooldown)
         {
-            velocity.y = minJumpVelocity;
+            sword.HurtboxActivation();
+            sword.StartCooldown();
+            Invoke("HurtboxDeactivate", 0.2f);
+            Invoke("RefreshCooldown", 0.5f);
         }
+
+    }
+    void HurtboxDeactivate()
+    {
+        sword.HurtboxDeactivate();
+    }
+
+    void RefreshCooldown()
+    {
+        sword.RefreshCooldown();
     }
 
 
@@ -149,10 +141,5 @@ public class Player : MonoBehaviour {
        
     }
 
-    void CalculateVelocity()
-    {
-        float targetVelocityX = directionalInput.x * moveSpeed;
-        velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing, (controller.collisions.below) ? accelerationTimeGrounded : accelerationTimeAirborne);
-        velocity.y += gravity * Time.deltaTime;
-    }
+  
 }

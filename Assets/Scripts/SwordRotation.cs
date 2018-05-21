@@ -4,31 +4,19 @@ using UnityEngine;
 
 public class SwordRotation : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
 
-    // Update is called once per frame
     void Update()
     {
-
-        //Get the Screen positions of the object
-        Vector2 positionOnScreen = Camera.main.WorldToViewportPoint(transform.position);
-
-        //Get the Screen position of the mouse
-        Vector2 mouseOnScreen = (Vector2)Camera.main.ScreenToViewportPoint(Input.mousePosition);
-
-        //Get the angle between the points
-        float angle = AngleBetweenTwoPoints(positionOnScreen, mouseOnScreen);
-
-        //Ta Daaa
-        transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, angle));
-        //transform.LookAt(Input.mousePosition);
+        HurtboxPlacement(Input.mousePosition);
     }
 
-    float AngleBetweenTwoPoints(Vector3 a, Vector3 b)
+    public void HurtboxPlacement(Vector3 mouseInput)
     {
-        return Mathf.Atan2(a.y - b.y, a.x - b.x) * Mathf.Rad2Deg;
+        //rotation
+        Vector2 direction = Camera.main.ScreenToWorldPoint(mouseInput) - transform.position;
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+        transform.rotation = rotation;
+
     }
 }
