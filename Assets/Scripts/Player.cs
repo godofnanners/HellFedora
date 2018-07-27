@@ -7,14 +7,16 @@ public class Player : MovingCreature {
 
     bool wallSliding;
     bool wallEdgeGrabbing;
+    public float timeToWallUnstick;
     Sword sword;
+    Deflect deflect;
 
     protected override void Start()
     {
         base.Start();
         sword = GameObject.FindGameObjectWithTag("Sword").GetComponent<Sword>();
+        deflect = GameObject.FindGameObjectWithTag("Deflect").GetComponent<Deflect>();
 
-        
     }
 
     void Update()
@@ -85,19 +87,43 @@ public class Player : MovingCreature {
             sword.HurtboxActivation();
             sword.StartCooldown();
             Invoke("HurtboxDeactivate", 0.2f);
-            Invoke("RefreshCooldown", 0.5f);
+            Invoke("RefreshSCooldown", 0.5f);
         }
 
     }
+
     void HurtboxDeactivate()
     {
         sword.HurtboxDeactivate();
     }
 
-    void RefreshCooldown()
+    void RefreshSCooldown()
     {
         sword.RefreshCooldown();
     }
+
+    public void OnDeflectInput()
+    {
+        if (!deflect.cooldown)
+        {
+            deflect.DeflectboxActivation();
+            deflect.StartCooldown();
+            Invoke("DeflectboxDeactivate", 0.2f);
+            Invoke("RefreshDCooldown", 0.5f);
+        }
+
+    }
+
+    void DeflectboxDeactivate()
+    {
+        deflect.DeflectboxDeactivate();
+    }
+
+    void RefreshDCooldown()
+    {
+        deflect.RefreshCooldown();
+    }
+
 
 
     void HandleWallSliding()

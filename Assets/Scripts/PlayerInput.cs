@@ -34,5 +34,9 @@ public class PlayerInput : MonoBehaviour {
         {
             player.OnHitInput();
         }
+        if (Input.GetButton("Deflect"))
+        {
+            player.OnDeflectInput();
+        }
     }
 }

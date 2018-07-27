@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SwordRotation : MonoBehaviour {
 
+    public float angle;
 
     void Update()
     {
@@ -14,9 +15,10 @@ public class SwordRotation : MonoBehaviour {
     {
         //rotation
         Vector2 direction = Camera.main.ScreenToWorldPoint(mouseInput) - transform.position;
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.forward);
         transform.rotation = rotation;
+
 
     }
 }

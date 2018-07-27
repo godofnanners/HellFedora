@@ -7,6 +7,8 @@ TagManager:
   - Sword
   - Through
   - Enemy
+  - Deflect
+  - SwordRotation
   layers:
   - Default
   - TransparentFX

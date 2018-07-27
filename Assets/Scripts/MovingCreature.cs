@@ -5,9 +5,13 @@ using UnityEngine;
 [RequireComponent(typeof(Controller2D))]
 public class MovingCreature : MonoBehaviour {
 
-    [SerializeField] protected float moveSpeed;
+    public float moveSpeed;
+    public float attackSpeed;
+    protected float originalmoveSpeed;
+    public float elasticity;
     [SerializeField] protected float maxJumpHeight = 4;
     [SerializeField] protected float minJumpHeight = 1;
+    [SerializeField] protected float airResistance;
     [SerializeField] protected float timeToJumpToApex;
     [SerializeField] protected float accelerationTimeAirborne;
     [SerializeField] protected float accelerationTimeGrounded;
@@ -16,15 +20,18 @@ public class MovingCreature : MonoBehaviour {
     [SerializeField] protected Vector2 wallJumpClimb;
     [SerializeField] protected Vector2 wallJumpOff;
     [SerializeField] protected Vector2 wallLeap;
-    protected float timeToWallUnstick;
+
+
     protected float gravity = -9.82f;
     protected float maxJumpVelocity;
     protected float minJumpVelocity;
     protected float jumpVelocity;
     protected float velocityXSmoothing;
+    protected float velocityYSmoothing;
     protected Vector3 velocity;
-    protected Vector2 directionalInput;
+    public Vector2 directionalInput;
     protected bool tired;
+    protected bool walking;
     protected int wallDirX;
     protected Controller2D controller;
     
@@ -32,8 +39,8 @@ public class MovingCreature : MonoBehaviour {
     protected virtual void Start()
     {
         controller = GetComponent<Controller2D>();
-        
 
+        originalmoveSpeed = moveSpeed;
         gravity = -(2 * maxJumpHeight) / Mathf.Pow(timeToJumpToApex, 2);
         maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpToApex;
         minJumpVelocity = Mathf.Sqrt(2 * Mathf.Abs(gravity) * minJumpHeight);
@@ -43,6 +50,7 @@ public class MovingCreature : MonoBehaviour {
 
     public void SetDirectionalInput(Vector2 input)
     {
+        walking = true;
         directionalInput = input;
     }
 
@@ -74,15 +82,31 @@ public class MovingCreature : MonoBehaviour {
         }
     }
 
-    
 
+    public void BurstVelocity(Vector2 newVelocity)
+    {
+        velocity = newVelocity;
+    }
 
-    
+    bool CheckBounceCollisions()
+    {
+        if (controller.collisions.above || controller.collisions.below || controller.collisions.left || controller.collisions.right)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
 
-    protected void CalculateVelocity()
+    }
+
+    protected virtual void CalculateVelocity()
     {
         float targetVelocityX = directionalInput.x * moveSpeed;
         velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing, (controller.collisions.below) ? accelerationTimeGrounded : accelerationTimeAirborne);
-        velocity.y += gravity * Time.deltaTime;
+        velocity.y += gravity * Time.deltaTime;       
     }
+
+    
 }

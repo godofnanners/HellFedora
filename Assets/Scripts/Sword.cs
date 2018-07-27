@@ -7,11 +7,12 @@ public class Sword : MonoBehaviour
     BoxCollider2D collider;
     SpriteRenderer sR;
     public bool cooldown;
-
+    Color originialColor;
     void Start()
     {
         collider = GetComponent<BoxCollider2D>();
         sR = GetComponent<SpriteRenderer>();
+        originialColor = sR.color;
     }
 
     public void HurtboxActivation()
@@ -23,7 +24,7 @@ public class Sword : MonoBehaviour
     public void HurtboxDeactivate()
     {
         collider.enabled = false;
-        sR.color = Color.white;
+        sR.color = originialColor;
     }
 
     public void RefreshCooldown()
