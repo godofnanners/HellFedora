@@ -36,13 +36,13 @@ public class FuzzyEnemy : MonoBehaviour {
         return vectorToPlayer;
     }
 
-    Vector2 GetDistanceFromPlayer()
-    {
+    //Vector2 GetDistanceFromPlayer()
+    //{
 
-    }
+    //}
 
-    Vector2 GetClosertoPowerUp()
-    {
+    //Vector2 GetClosertoPowerUp()
+    //{
 
-    }
+    //}
 }

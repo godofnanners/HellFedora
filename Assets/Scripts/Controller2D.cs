@@ -6,7 +6,8 @@ using UnityEngine;
 
 public class Controller2D : RaycastController {
 
-    [SerializeField]float maxSlopeAngle = 80;
+    [SerializeField]float maxSlopeAngle;
+    bool Bounce;
    
     public CollisionInfo collisions;
     Vector2 playerInput;
@@ -54,6 +55,8 @@ public class Controller2D : RaycastController {
         }
 
         transform.Translate(moveAmount);
+
+        
 
         if (standingOnPlatform)
         {
@@ -284,6 +287,8 @@ public class Controller2D : RaycastController {
 
     }
 
+
+
     void ResetFallingThroughPlatform()
     {
         collisions.fallingThroughPlatform = false;
@@ -300,7 +305,7 @@ public class Controller2D : RaycastController {
         
 
         public float slopeAngle, slopeAngleOld;
-        public Vector2 slopeNormal;
+        public Vector2 slopeNormal,slopeNormalOld;
         public Vector2 moveAmountOld;
         public int faceDir;
         public bool fallingThroughPlatform;
@@ -312,9 +317,10 @@ public class Controller2D : RaycastController {
             climbingSlope = false;
             descendingSlope = false;
             slidingDownMaxSlope = false;
-            slopeNormal = Vector2.zero;
 
             slopeAngleOld = slopeAngle;
+            slopeNormalOld = slopeNormal;
+            slopeNormal = Vector2.zero;
             slopeAngle = 0;
         }
     }

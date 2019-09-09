@@ -245,6 +245,8 @@ public class FiniteEnemy : MonoBehaviour {
         return player.transform.position;
     }
 
+    
+
     private void OnDrawGizmos()
     {
         if (localPatrolpoints != null)

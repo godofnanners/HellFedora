@@ -20,24 +20,37 @@ public class GroundedEnemy : MovingCreature {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-        CalculateVelocity();
+	void Update ()
+    {
        
+        CalculateVelocity();
         
         controller.Move(velocity * Time.deltaTime, directionalInput);
 
-        if (controller.collisions.above || controller.collisions.below)
+        if (FE.currentEnemyState == FiniteEnemy.State.Recovering && CheckBounceCollisions())
         {
-            if (controller.collisions.slidingDownMaxSlope)
-            {
-                velocity.y += controller.collisions.slopeNormal.y * -gravity * Time.deltaTime;
-            }
-            else
-            {
-                velocity.y = 0;
-            }
+            Bounce();
+            Debug.Log("bounce");
         }
         
+
+
+
+
+            if (controller.collisions.above || controller.collisions.below)
+            {
+                if (controller.collisions.slidingDownMaxSlope)
+                {
+                    velocity.y += controller.collisions.slopeNormal.y * -gravity * Time.deltaTime;
+                }
+                else
+                {
+                    velocity.y = 0;
+                }
+            }
+
+        
+
     }
 
     protected override void CalculateVelocity()
@@ -65,7 +78,10 @@ public class GroundedEnemy : MovingCreature {
         
     }
 
-   
+    void Bounce()
+    {
+        velocity=-1*CalculateBounceVelocity();
+    }
 
     public bool IsOnGround()
     {

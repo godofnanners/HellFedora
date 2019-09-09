@@ -88,9 +88,9 @@ public class MovingCreature : MonoBehaviour {
         velocity = newVelocity;
     }
 
-    bool CheckBounceCollisions()
+    protected bool CheckBounceCollisions()
     {
-        if (controller.collisions.above || controller.collisions.below || controller.collisions.left || controller.collisions.right)
+        if ((controller.collisions.left || controller.collisions.right))
         {
             return true;
         }
@@ -99,6 +99,12 @@ public class MovingCreature : MonoBehaviour {
             return false;
         }
 
+    }
+
+    protected Vector2 CalculateBounceVelocity()
+    {
+        return new Vector2(velocity.x *controller.collisions.slopeNormal.x, velocity.y * controller.collisions.slopeNormal.y);
+        
     }
 
     protected virtual void CalculateVelocity()
