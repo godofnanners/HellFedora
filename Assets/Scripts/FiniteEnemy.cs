@@ -28,7 +28,7 @@ public class FiniteEnemy : MonoBehaviour {
     int pIndex;
     public State currentEnemyState;
 
-    public enum State {Attack,Patrol,Chase,Recovering,Dead };
+    public enum State {Attack,Patrol,Chase,Recovering,Deflected,Dead };
 
     void Start()
     {
@@ -99,6 +99,29 @@ public class FiniteEnemy : MonoBehaviour {
                 
 
                 break;
+            case State.Deflected:
+                if (!stunned)
+                {
+                    Timer(ref restingTime);
+                    if (restingTime <= 0)
+                    {
+                        restingTime = ogRestingTime;
+                        currentEnemyState = State.Patrol;
+                    }
+                }
+                else
+                {
+                    Timer(ref stunnedtime);
+                    if (stunnedtime <= 0)
+                    {
+                        stunnedtime = gEnemy.recoverTime;
+                        activeMovement = true;
+                        stunned = false;
+                        currentEnemyState = State.Patrol;
+
+                    }
+                }
+                break;
             case State.Attack:
 
                 Debug.Log(gEnemy.IsOnGround());
@@ -132,7 +155,6 @@ public class FiniteEnemy : MonoBehaviour {
         {
             Vector2 directionalInput = new Vector2(direction, jump);
             gEnemy.SetDirectionalInput(directionalInput);
-
         }
 
         if (direction != 0)
@@ -141,9 +163,7 @@ public class FiniteEnemy : MonoBehaviour {
         }
 
         jump = 0;
-        direction = 0;
-
-        
+        direction = 0;      
 
     }
 
@@ -162,7 +182,7 @@ public class FiniteEnemy : MonoBehaviour {
         jump = 1;
 
         
-        //gEnemy.BurstVelocity(attackVec);       
+              
         
     }
 
@@ -198,11 +218,11 @@ public class FiniteEnemy : MonoBehaviour {
 
     public void Deflected(Vector2 newVelocity,float magnitude)
     {
-        if(currentEnemyState != State.Recovering)
+        if(currentEnemyState != State.Deflected)
         {
             stunned = true;
             hasAttacked = false;
-            currentEnemyState = State.Recovering;
+            currentEnemyState = State.Deflected;
 
             gEnemy.BurstVelocity(newVelocity * magnitude);
         }

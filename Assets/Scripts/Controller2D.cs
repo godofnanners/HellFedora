@@ -95,6 +95,7 @@ public class Controller2D : RaycastController {
                 }
 
                 float slopeAngle = Vector2.Angle(hit.normal, Vector2.up);
+                collisions.slopeNormal = hit.normal;
 
                 if (i == 0 && slopeAngle <= maxSlopeAngle)
                 {
@@ -146,7 +147,7 @@ public class Controller2D : RaycastController {
             Debug.DrawRay(rayOrigin, Vector2.up * directionY, Color.red);
 
             if (hit)
-            {
+            {              
                 if (hit.collider.tag == "Through")
                 {
                     if (directionY == 1 || hit.distance == 0)
@@ -164,7 +165,7 @@ public class Controller2D : RaycastController {
                         continue;
                     }
                 }
-
+                collisions.slopeNormal = hit.normal;
                 moveAmount.y = (hit.distance - skinWidth) * directionY;
                 rayLength = hit.distance;
 

@@ -59,7 +59,7 @@ public class Deflect : MonoBehaviour {
 
     Vector2 DeflectionDirection(float angle)
     {
-        //Debug.Log(new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)));
+        
         return new Vector2(Mathf.Cos(Mathf.Deg2Rad * angle), Mathf.Sin(Mathf.Deg2Rad*angle));
     }
 
